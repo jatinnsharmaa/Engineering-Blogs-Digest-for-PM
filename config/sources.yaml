@@ -1,0 +1,109 @@
+# Each source has a type: "gmail" or "rss"
+# rss: agent polls this RSS/Atom feed URL; SQLite tracks processed GUIDs
+# gmail: agent reads unread emails from this sender address (optional subject_contains filter)
+#
+# Set enabled: false to pause a source without deleting it.
+
+sources:
+  # Indian — Food & Grocery
+  - name: Swiggy Bytes
+    enabled: true
+    type: rss
+    url: https://medium.com/feed/swiggy-bytes
+
+  - name: Zepto Engineering
+    enabled: true
+    type: rss
+    url: https://blog.zeptonow.com/feed
+
+  # Indian — Mobility
+  - name: Rapido Labs
+    enabled: true
+    type: rss
+    url: https://medium.com/feed/rapido-labs
+
+  # Indian — Travel
+  - name: MakeMyTrip Engineering
+    enabled: true
+    type: rss
+    url: https://medium.com/feed/makemytrip-engineering
+
+  - name: Ixigo Engineering
+    enabled: true
+    type: rss
+    url: https://ixigo.tech/feed
+
+  - name: OYO Engineering
+    enabled: true
+    type: rss
+    url: https://medium.com/feed/@oyoengineering
+
+  # Indian — Fintech
+  - name: Zerodha Tech
+    enabled: true
+    type: rss
+    url: https://zerodha.tech/index.xml
+
+  - name: Groww Engineering
+    enabled: true
+    type: rss
+    url: https://tech.groww.in/feed
+
+  - name: Razorpay Engineering
+    enabled: true
+    type: rss
+    url: https://engineering.razorpay.com/feed
+
+  - name: CRED Engineering
+    enabled: true
+    type: rss
+    url: https://engineering.cred.club/feed
+
+  # Indian — Entertainment / Social
+  - name: ShareChat TechByte
+    enabled: true
+    type: rss
+    url: https://medium.com/feed/sharechat-techbyte
+
+  # Indian — E-commerce
+  - name: Flipkart Tech
+    enabled: true
+    type: rss
+    url: https://blog.flipkart.tech/feed
+
+  - name: Meesho Tech
+    enabled: true
+    type: rss
+    url: https://medium.com/feed/meesho-tech
+
+  - name: Myntra Engineering
+    enabled: true
+    type: rss
+    url: https://medium.com/feed/myntra-engineering
+
+  # Indian — B2B / SaaS
+  - name: Freshworks Engineering
+    enabled: true
+    type: rss
+    url: https://medium.com/feed/freshworks-engineering-blog
+
+  - name: Postman Engineering
+    enabled: true
+    type: rss
+    url: https://blog.postman.com/feed/
+
+  - name: BrowserStack Engineering
+    enabled: true
+    type: rss
+    url: https://www.browserstack.com/blog/feed
+
+  # Global
+  - name: Netflix Tech Blog
+    enabled: true
+    type: rss
+    url: https://medium.com/feed/netflix-techblog
+
+  - name: Airbnb Engineering
+    enabled: true
+    type: rss
+    url: https://medium.com/feed/airbnb-engineering

@@ -1,0 +1,7 @@
+auth/credentials.json
+auth/token.json
+db/digest.db
+digest_preview.html
+__pycache__/
+*.pyc
+.env

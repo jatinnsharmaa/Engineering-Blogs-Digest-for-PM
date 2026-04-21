@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body { margin: 0; padding: 0; background: #f4f4f4; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+  .wrapper { max-width: 620px; margin: 24px auto; background: #ffffff; border-radius: 8px; overflow: hidden; }
+  .header { background: #1a1a2e; padding: 28px 32px; }
+  .header h1 { color: #ffffff; margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .header p { color: #9999bb; margin: 6px 0 0; font-size: 13px; }
+  .intro { padding: 24px 32px 0; color: #333; font-size: 15px; line-height: 1.6; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+  .theme { padding: 24px 32px 0; }
+  .theme-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+  .theme-name { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #6c63ff; }
+  .theme-framing { font-size: 13px; color: #666; margin: 0 0 16px; font-style: italic; line-height: 1.5; }
+  .article { border-left: 3px solid #e8e8f0; padding: 0 0 16px 14px; margin-bottom: 16px; }
+  .article:last-child { margin-bottom: 0; }
+  .article-meta { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #9999bb; margin-bottom: 4px; }
+  .article-title { font-size: 15px; font-weight: 600; color: #1a1a2e; margin: 0 0 10px; line-height: 1.4; }
+  .article-title a { color: #1a1a2e; text-decoration: none; }
+  .article-title a:hover { text-decoration: underline; }
+  .row { display: flex; gap: 6px; margin-bottom: 5px; font-size: 13px; line-height: 1.5; color: #444; }
+  .label { font-weight: 700; color: #1a1a2e; white-space: nowrap; min-width: 70px; }
+  .divider { border: none; border-top: 1px solid #eee; margin: 20px 32px 0; }
+  .closing { padding: 20px 32px; font-size: 14px; color: #555; line-height: 1.6; border-top: 1px solid #eee; font-style: italic; }
+  .footer { background: #f9f9fb; padding: 16px 32px; font-size: 12px; color: #aaa; text-align: center; border-top: 1px solid #eee; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="header">
+    <h1>PM Engineering Digest</h1>
+    <p>{{ digest.n_articles }} stories across {{ digest.n_companies }} companies</p>
+  </div>
+
+  <div class="intro">{{ digest.intro }}</div>
+
+  {% for theme in digest.themes %}
+  <div class="theme">
+    <div class="theme-name">{{ theme.name }}</div>
+    <p class="theme-framing">{{ theme.framing }}</p>
+
+    {% for article in theme.articles %}
+    <div class="article">
+      <div class="article-meta">{{ article.company }}</div>
+      <div class="article-title">
+        {% if article.url %}<a href="{{ article.url }}">{{ article.title }}</a>{% else %}{{ article.title }}{% endif %}
+      </div>
+      <div class="row"><span class="label">Problem</span><span>{{ article.problem }}</span></div>
+      <div class="row"><span class="label">Impact</span><span>{{ article.business_impact }}</span></div>
+      <div class="row"><span class="label">Takeaway</span><span>{{ article.key_takeaway }}</span></div>
+    </div>
+    {% endfor %}
+  </div>
+  <hr class="divider">
+  {% endfor %}
+
+  <div class="closing">{{ digest.closing }}</div>
+
+  <div class="footer">
+    PM Engineering Digest &mdash; sent weekly every Monday &mdash; jatin0331@gmail.com
+  </div>
+
+</div>
+</body>
+</html>

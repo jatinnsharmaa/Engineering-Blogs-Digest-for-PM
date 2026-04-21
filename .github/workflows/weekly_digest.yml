@@ -1,0 +1,53 @@
+name: Weekly PM Digest
+
+on:
+  schedule:
+    - cron: '0 9 * * 6'   # Every Saturday 9am UTC (2:30pm IST) — change via make_cron.py
+  workflow_dispatch:        # Manual trigger for testing
+
+permissions:
+  contents: read            # minimum needed — no write access to repo
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Download SQLite DB (RSS dedup state)
+        uses: actions/download-artifact@v4
+        with:
+          name: digest-db
+          path: db/
+        continue-on-error: true
+
+      - name: Decode Gmail credentials
+        run: |
+          mkdir -p auth
+          echo "$GMAIL_CREDENTIALS_B64" | base64 -d > auth/credentials.json
+          echo "$GMAIL_TOKEN_B64" | base64 -d > auth/token.json
+        env:
+          GMAIL_CREDENTIALS_B64: ${{ secrets.GMAIL_CREDENTIALS }}
+          GMAIL_TOKEN_B64: ${{ secrets.GMAIL_TOKEN }}
+
+      - name: Run digest
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python main.py
+
+      - name: Upload SQLite DB (persist RSS state)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: digest-db
+          path: db/digest.db
+          retention-days: 90
+          overwrite: true

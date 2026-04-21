@@ -1,0 +1,20 @@
+email:
+  recipient: jatin0331@gmail.com
+  sender: jatin0331@gmail.com
+  subject_template: "Engineering Blogs Digest for PM"
+
+schedule:
+  day: Saturday   # Mon / Tue / Wed / Thu / Fri / Sat / Sun
+  hour: 9         # 24-hour format, UTC
+
+models:
+  summarizer: claude-haiku-4-5-20251001
+  compiler: claude-sonnet-4-6
+
+limits:
+  lookback_days: 7
+  max_articles_per_source: 5
+  summarizer_batch_size: 5
+
+db_path: db/digest.db
+auth_dir: auth
