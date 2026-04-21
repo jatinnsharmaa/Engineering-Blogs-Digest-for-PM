@@ -9,7 +9,7 @@ A weekly email digest of engineering blog posts from top tech companies, framed 
 - **Python 3.12+** — check with `python3 --version`. Install from python.org if needed.
 - **Git** — to push to GitHub for the weekly cron to run.
 - **An Anthropic API key** — from console.anthropic.com.
-- **A Google account** — jatin0331@gmail.com (already configured in settings.yaml).
+- **A Google account** — your.email@gmail.com (already configured in settings.yaml).
 
 ---
 
@@ -57,7 +57,7 @@ echo 'export ANTHROPIC_API_KEY=sk-ant-...your-key-here...' >> ~/.zshrc
 python auth/setup.py
 ```
 
-This opens your browser. Log in with jatin0331@gmail.com and grant permissions.
+This opens your browser. Log in with your.email@gmail.com and grant permissions.
 A `auth/token.json` file is created — this is your login token. Keep it private.
 
 ---

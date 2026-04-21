@@ -48,7 +48,7 @@ Every week you receive an email with engineering posts grouped into 3–5 themes
            │  (themes, intro, closing)
            ▼
   ┌──────────────────┐     renders digest.html.jinja2
-  │   SenderAgent    │──── Gmail API ──► jatin0331@gmail.com
+  │   SenderAgent    │──── Gmail API ──► your.email@gmail.com
   └──────────────────┘
            │
            ▼
