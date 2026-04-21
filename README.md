@@ -9,6 +9,7 @@ Built as a multi-agent Python pipeline using the Claude API (Anthropic) and Gmai
 ## What you get
 
 Every week you receive an email with engineering posts grouped into 3–5 themes (e.g. "AI in Core Products", "Infrastructure for Reliability", "Growth & Monetisation Bets"). Each article is summarised from a PM's perspective — not the technical how, but the business why: what problem existed, what was the impact, and what's the one takeaway a PM should remember.
+<img width="608" height="739" alt="image" src="https://github.com/user-attachments/assets/76f77e73-aeb3-4059-bb0c-c022df973f20" />
 
 ---
 
