@@ -15,48 +15,22 @@ Every week you receive an email with engineering posts grouped into 3–5 themes
 ## Architecture
 
 ```
-┌──────────────────────────────────────────────────────────────────┐
-│                       pm-digest pipeline                         │
-│                   (orchestrated by main.py)                      │
-└──────────────────────────────────────────────────────────────────┘
-
-  18 RSS Feeds
-  (config/sources.yaml)
-        │
-        ▼
-  ┌─────────────┐     reads new articles      ┌──────────────────┐
-  │ FetcherAgent│ ◄─── skips seen GUIDs ─────►│ SQLite (db/)     │
-  │             │     marks seen after send    │ rss_articles tbl │
-  └──────┬──────┘                             └──────────────────┘
-         │
-         │  List[Article]
-         │  (company, title, url, body)
-         ▼
-  ┌──────────────────┐
-  │ SummarizerAgent  │──── Claude Haiku (1 call per article)
-  │                  │     prompt cached across all articles
-  └────────┬─────────┘     returns: skip | {problem, solution,
-           │                         business_impact, user_impact,
-           │  List[ArticleSummary]   key_takeaway}
-           ▼
-  ┌──────────────────┐
-  │  CompilerAgent   │──── Claude Sonnet (1 call for entire week)
-  │                  │     sees all summaries together
-  └────────┬─────────┘     groups into themes, writes intro/closing
-           │
-           │  DigestContent
-           │  (themes, intro, closing)
-           ▼
-  ┌──────────────────┐     renders digest.html.jinja2
-  │   SenderAgent    │──── Gmail API ──► your.email@gmail.com
-  └──────────────────┘
-           │
-           ▼
-    mark articles processed
-    (Gmail: mark as read | RSS: write GUIDs to SQLite)
+18 RSS Feeds
+     │
+     ▼
+FetcherAgent  ─────────────────────────────  SQLite (tracks seen articles)
+     │
+     ▼
+SummarizerAgent  ──  Claude Haiku  ──  1 API call per article
+     │
+     ▼
+CompilerAgent  ──  Claude Sonnet  ──  1 API call for the full week
+     │
+     ▼
+SenderAgent  ──  Gmail API  ──  weekly digest to your inbox
 ```
 
-**State management**: processed articles are never re-sent. For RSS sources, processed GUIDs are stored in SQLite (`db/digest.db`). State is only committed after the email send succeeds — if the send fails, nothing is marked and the articles are retried next run.
+**Key behaviour**: nothing is marked as processed until the email send succeeds. If the pipeline fails mid-way, all articles are retried on the next run.
 
 ---
 
