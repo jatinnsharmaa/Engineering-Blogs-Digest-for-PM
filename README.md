@@ -1,6 +1,6 @@
 # PM Engineering Digest
 
-A weekly email intelligence briefing for Product Managers — automatically collects engineering blog posts from 19 top Indian and global tech companies, extracts the business and product story from each, and delivers a themed digest to your inbox every week.
+A weekly email intelligence briefing for Product Managers — automatically collects engineering blog posts from 18 top Indian and global tech companies, extracts the business and product story from each, and delivers a themed digest to your inbox every week.
 
 Built as a multi-agent Python pipeline using the Claude API (Anthropic) and Gmail API.
 
@@ -20,7 +20,7 @@ Every week you receive an email with engineering posts grouped into 3–5 themes
 │                   (orchestrated by main.py)                      │
 └──────────────────────────────────────────────────────────────────┘
 
-  19 RSS Feeds
+  18 RSS Feeds
   (config/sources.yaml)
         │
         ▼
@@ -72,7 +72,7 @@ Every week you receive an email with engineering posts grouped into 3–5 themes
 
 ---
 
-## Sources (19 verified)
+## Sources (18 verified)
 
 | Sector | Companies |
 |---|---|
@@ -82,7 +82,7 @@ Every week you receive an email with engineering posts grouped into 3–5 themes
 | Fintech | Zerodha, Groww, Razorpay, CRED |
 | Entertainment / Social | ShareChat |
 | E-commerce | Flipkart, Meesho, Myntra |
-| B2B / SaaS | Freshworks, Postman, BrowserStack |
+| B2B / SaaS | Freshworks, BrowserStack |
 | Global | Netflix, Airbnb |
 
 All sources use RSS feeds (no email subscription required). RSS availability and feed URLs were verified before inclusion.

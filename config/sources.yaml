@@ -87,11 +87,6 @@ sources:
     type: rss
     url: https://medium.com/feed/freshworks-engineering-blog
 
-  - name: Postman Engineering
-    enabled: true
-    type: rss
-    url: https://blog.postman.com/feed/
-
   - name: BrowserStack Engineering
     enabled: true
     type: rss
