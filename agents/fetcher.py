@@ -163,10 +163,24 @@ class FetcherAgent:
 
         if not creds or not creds.valid:
             if creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
+                try:
+                    creds.refresh(Request())
+                except Exception as e:
+                    raise RuntimeError(
+                        f"Gmail token refresh failed: {e}\n"
+                        "The OAuth refresh token has likely expired (Google invalidates them after 7 days "
+                        "for apps in 'Testing' mode).\n"
+                        "Fix: publish your Google Cloud OAuth app (Testing → Production), regenerate "
+                        "token.json locally via 'python auth/setup.py', then update the GMAIL_TOKEN "
+                        "secret in GitHub → Settings → Secrets."
+                    ) from e
             else:
-                flow = InstalledAppFlow.from_client_secrets_file(str(creds_path), SCOPES)
-                creds = flow.run_local_server(port=0)
+                # run_local_server() opens a browser — never works in CI.
+                raise RuntimeError(
+                    "No valid Gmail credentials found and interactive auth is not possible in CI.\n"
+                    "Run 'python auth/setup.py' locally to generate auth/token.json, then base64-encode "
+                    "it and store it as the GMAIL_TOKEN secret in GitHub → Settings → Secrets."
+                )
             token_path.write_text(creds.to_json())
 
         self._gmail_service = build("gmail", "v1", credentials=creds)
