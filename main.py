@@ -103,7 +103,12 @@ def main(dry_run: bool = False):
         # articles will be picked up and retried on the next run.
         fetcher.mark_gmail_processed()
         fetcher.mark_rss_processed(articles)
-        print("[main] done — articles marked as processed")
+        n_sources = len([s for s in sources if s.get("enabled", True)])
+        print(
+            f"[main] DONE | {n_sources} sources | {len(articles)} fetched | "
+            f"{len(summaries)} summarized | {len(digest.themes)} themes | "
+            f"sent to {recipient}"
+        )
     except Exception as e:
         print(f"[main] pipeline failed: {e}", file=sys.stderr)
         sys.exit(1)

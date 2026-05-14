@@ -6,7 +6,8 @@ on:
   workflow_dispatch:        # Manual trigger for testing
 
 permissions:
-  contents: read            # minimum needed — no write access to repo
+  contents: read
+  actions: read             # required to download artifacts from previous runs
 
 jobs:
   digest:
