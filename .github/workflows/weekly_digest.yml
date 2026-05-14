@@ -41,6 +41,8 @@ jobs:
       - name: Run digest
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          DIGEST_RECIPIENT: ${{ secrets.DIGEST_RECIPIENT }}
+          DIGEST_SENDER: ${{ secrets.DIGEST_SENDER }}
         run: python main.py
 
       - name: Upload SQLite DB (persist RSS state)

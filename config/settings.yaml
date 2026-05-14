@@ -1,6 +1,6 @@
 email:
-  recipient: jatin0331@gmail.com
-  sender: jatin0331@gmail.com
+  recipient: your.email@gmail.com
+  sender: your.email@gmail.com
   subject_template: "Engineering Blogs Digest for PM"
 
 schedule:

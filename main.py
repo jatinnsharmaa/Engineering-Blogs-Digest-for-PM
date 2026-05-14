@@ -88,11 +88,13 @@ def main(dry_run: bool = False):
         return
 
     # 4. Send
+    recipient = os.environ.get("DIGEST_RECIPIENT") or settings["email"]["recipient"]
+    sender_addr = os.environ.get("DIGEST_SENDER") or settings["email"]["sender"]
     gmail_svc = fetcher._get_gmail_service()
     sender = SenderAgent(
         gmail_service=gmail_svc,
-        recipient=settings["email"]["recipient"],
-        sender=settings["email"]["sender"],
+        recipient=recipient,
+        sender=sender_addr,
     )
     try:
         sender.run(digest)
