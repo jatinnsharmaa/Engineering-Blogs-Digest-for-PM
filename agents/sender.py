@@ -31,7 +31,7 @@ class SenderAgent:
                 userId="me", body={"raw": raw}
             ).execute()
         except Exception as e:
-            print(f"[sender] Gmail send failed: {e}", file=__import__("sys").stderr)
+            print(f"    Failed to send: {e}", file=__import__("sys").stderr)
             raise
-        print(f"[sender] digest sent to {self.recipient}")
+        print("    Digest delivered successfully")
         return True

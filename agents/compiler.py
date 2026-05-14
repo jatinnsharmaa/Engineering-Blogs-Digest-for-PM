@@ -76,8 +76,7 @@ class CompilerAgent:
 
         n_companies = len({s.company for s in summaries})
         subject = "Engineering Blogs Digest for PM"
-
-        return DigestContent(
+        digest = DigestContent(
             subject=subject,
             intro=data["intro"],
             closing=data["closing"],
@@ -85,3 +84,5 @@ class CompilerAgent:
             n_articles=len(summaries),
             n_companies=n_companies,
         )
+        print(f"    {len(digest.themes)} themes across {n_companies} {'company' if n_companies == 1 else 'companies'}")
+        return digest

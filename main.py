@@ -54,13 +54,22 @@ def main(dry_run: bool = False):
 
     sources, settings = load_config()
     date_str = datetime.now().strftime("%a, %b %d %Y")
+    n_sources = len([s for s in sources if s.get("enabled", True)])
+    lookback = settings["limits"]["lookback_days"]
+    SEP = "=" * 60
 
     # 1. Fetch
+    print(SEP)
+    print(f"  STEP 1 — Reading RSS feeds  ({n_sources} sources, past {lookback} days)")
+    print(SEP)
     fetcher = FetcherAgent(sources=sources, settings=settings)
     articles = fetcher.run()
-    print(f"[fetcher] {len(articles)} new articles found")
+    print(f"\n  → {len(articles)} {'article' if len(articles) == 1 else 'articles'} to process\n")
 
-    # 2. Summarize (skip if no articles)
+    # 2. Summarize
+    print(SEP)
+    print("  STEP 2 — Summarising")
+    print(SEP)
     summaries = []
     if articles:
         summarizer = SummarizerAgent(
@@ -68,26 +77,37 @@ def main(dry_run: bool = False):
             batch_size=settings["limits"]["summarizer_batch_size"],
         )
         summaries = summarizer.run(articles)
-        print(f"[summarizer] {len(summaries)} summaries generated ({len(articles) - len(summaries)} skipped)")
+        skipped = len(articles) - len(summaries)
+        print(f"  Summarised: {len(summaries)}")
+        if skipped:
+            print(f"  Skipped:    {skipped}  (not PM-relevant)")
+    else:
+        print("  Nothing to summarise")
+    print()
 
-    # 3. Compile — or build an empty digest if nothing to send
+    # 3. Compile
+    print(SEP)
+    print("  STEP 3 — Compiling digest")
+    print(SEP)
     if summaries:
         compiler = CompilerAgent(model=settings["models"]["compiler"])
         digest = compiler.run(summaries, date_str)
-        print(f"[compiler] digest compiled — {len(digest.themes)} themes")
     else:
-        reason = "no new posts found" if not articles else f"{len(articles)} articles fetched but all were not PM-relevant"
+        reason = "no new posts found" if not articles else "all articles were not PM-relevant"
         digest = _empty_digest(date_str, reason)
-        print(f"[main] sending empty digest: {reason}")
+        print(f"  Nothing to compile — sending quiet-week notice")
+    print()
 
     if dry_run:
         out_path = Path("digest_preview.html")
         out_path.write_text(_render_html(digest))
         print(f"[dry-run] digest written to {out_path} — NOT sent")
-        print(f"[dry-run] subject: {digest.subject}")
         return
 
     # 4. Send
+    print(SEP)
+    print("  STEP 4 — Sending")
+    print(SEP)
     recipient = os.environ.get("DIGEST_RECIPIENT") or settings["email"]["recipient"]
     sender_addr = os.environ.get("DIGEST_SENDER") or settings["email"]["sender"]
     gmail_svc = fetcher._get_gmail_service()
@@ -98,19 +118,14 @@ def main(dry_run: bool = False):
     )
     try:
         sender.run(digest)
-        # Mark articles as processed ONLY after a confirmed successful send.
-        # If the send raises, we exit here and nothing is marked — so the same
-        # articles will be picked up and retried on the next run.
         fetcher.mark_gmail_processed()
         fetcher.mark_rss_processed(articles)
-        n_sources = len([s for s in sources if s.get("enabled", True)])
-        print(
-            f"[main] DONE | {n_sources} sources | {len(articles)} fetched | "
-            f"{len(summaries)} summarized | {len(digest.themes)} themes | "
-            f"sent to {recipient}"
-        )
+        print()
+        print(SEP)
+        print(f"  DONE  |  {n_sources} feeds checked  |  {len(articles)} found  |  {len(summaries)} summarised  |  {len(digest.themes)} themes")
+        print(SEP)
     except Exception as e:
-        print(f"[main] pipeline failed: {e}", file=sys.stderr)
+        print(f"  Pipeline failed: {e}", file=sys.stderr)
         sys.exit(1)
 
 

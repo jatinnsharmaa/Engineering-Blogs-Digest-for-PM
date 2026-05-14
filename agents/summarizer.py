@@ -81,7 +81,6 @@ class SummarizerAgent:
             data = json.loads(raw)
 
             if data.get("skip"):
-                print(f"[summarizer] skipped (not PM-relevant): '{article.title}' ({article.company})")
                 return None
 
             return ArticleSummary(
@@ -95,5 +94,5 @@ class SummarizerAgent:
                 key_takeaway=data.get("key_takeaway", ""),
             )
         except Exception as e:
-            print(f"[summarizer] skipped '{article.title}': {e}")
+            print(f"      Error summarising '{article.company}': {e}")
             return None
