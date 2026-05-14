@@ -81,6 +81,7 @@ class SummarizerAgent:
             data = json.loads(raw)
 
             if data.get("skip"):
+                print(f"[summarizer] skipped (not PM-relevant): '{article.title}' ({article.company})")
                 return None
 
             return ArticleSummary(

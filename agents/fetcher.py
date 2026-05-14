@@ -43,8 +43,11 @@ class FetcherAgent:
 
     def run(self) -> list[Article]:
         active = [s for s in self.sources if s.get("enabled", True)]
+        skipped_sources = [s["name"] for s in self.sources if not s.get("enabled", True)]
         gmail_sources = [s for s in active if s["type"] == "gmail"]
         rss_sources = [s for s in active if s["type"] == "rss"]
+
+        print(f"[fetcher] sources: {len(active)} active, {len(skipped_sources)} disabled")
 
         articles: list[Article] = []
 
@@ -229,21 +232,29 @@ class FetcherAgent:
     def _fetch_rss(self, sources: list[dict]) -> list[Article]:
         conn = self._db_conn()
         articles: list[Article] = []
+        failed_sources: list[str] = []
 
         for source in sources:
             try:
                 feed = feedparser.parse(source["url"])
+                total_entries = len(feed.entries)
+                already_seen = 0
+                too_old = 0
+                no_body = 0
                 count = 0
+
                 for entry in feed.entries:
                     if count >= self.max_per_source:
                         break
 
                     guid = entry.get("id") or entry.get("link", "")
                     if self._rss_already_processed(conn, guid):
+                        already_seen += 1
                         continue
 
                     pub = self._parse_rss_date(entry)
                     if pub and pub < self.cutoff:
+                        too_old += 1
                         continue
 
                     url = entry.get("link", "")
@@ -251,6 +262,7 @@ class FetcherAgent:
                     if not body:
                         body = entry.get("summary", "")[:4000]
                     if not body:
+                        no_body += 1
                         continue
 
                     articles.append(
@@ -264,8 +276,18 @@ class FetcherAgent:
                         )
                     )
                     count += 1
+
+                skipped = already_seen + too_old + no_body
+                print(
+                    f"[fetcher] {source['name']}: {total_entries} in feed, "
+                    f"{count} new | {already_seen} seen, {too_old} too old, {no_body} no body"
+                )
             except Exception as e:
                 print(f"[fetcher] RSS error for {source['name']}: {e}")
+                failed_sources.append(source["name"])
+
+        if failed_sources:
+            print(f"[fetcher] failed sources ({len(failed_sources)}): {', '.join(failed_sources)}")
 
         conn.close()
         return articles
